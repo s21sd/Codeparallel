@@ -6,10 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "server:dev": "nodemon server.js",
+    "server:prod": "node server.js",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@codemirror/autocomplete": "^6.15.0",
     "@codemirror/lang-javascript": "^6.2.2",
     "@lezer/highlight": "^1.2.0",
     "@uiw/codemirror-extensions-langs": "^4.21.25",
@@ -17,6 +20,7 @@
     "@uiw/codemirror-themes": "^4.21.25",
     "@uiw/react-codemirror": "^4.21.25",
     "codemirror": "^6.0.1",
+    "express": "^4.19.2",
     "react": "^18.2.0",
     "react-avatar": "^5.0.3",
     "react-dom": "^18.2.0",
@@ -24,6 +28,8 @@
     "react-icons": "^5.0.1",
     "react-router-dom": "^6.22.3",
     "react-select": "^5.8.0",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

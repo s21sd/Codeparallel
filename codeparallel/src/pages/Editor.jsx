@@ -3,7 +3,6 @@ import Select from 'react-select';
 import CodeMirror from '@uiw/react-codemirror';
 import { draculaInit } from '@uiw/codemirror-theme-dracula';
 import { loadLanguage } from '@uiw/codemirror-extensions-langs';
-import { javascript } from '@codemirror/lang-javascript';
 import { tags as t } from '@lezer/highlight';
 const options = [
     { value: 'javascript', label: 'javascript' },
@@ -11,7 +10,7 @@ const options = [
     { value: 'java', label: 'java' },
 ];
 const Editor = () => {
-    const [selectedOption, setSelectedOption] = useState(null);
+    const [selectedOption, setSelectedOption] = useState('javascript');
     const [value, setValue] = useState("console.log('hello world!');");
     const onChange = useCallback((val, viewUpdate) => {
         console.log('val:', val);
@@ -28,17 +27,20 @@ const Editor = () => {
                 />
             </div>
             <div>
-                <CodeMirror value={value} height="100vh"
+                <CodeMirror
+                    autoCorrect='true'
+                    autoCloseTags
+                    value={value} height="100vh"
                     theme={draculaInit({
                         settings: {
                             caret: '#c6c6c6',
                             fontFamily: 'monospace',
                         },
                         styles: [
-                            { tag: t.comment, color: '#6272a4' },
+                            { tag: t.comment, color: '#6272a4', },
                         ]
                     })}
-                    extensions={[javascript({ jsx: true })]} onChange={onChange} />
+                    extensions={[loadLanguage(selectedOption)]} onChange={onChange} />
             </div>
         </div>
     )
