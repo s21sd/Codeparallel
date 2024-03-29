@@ -29,7 +29,7 @@ const Editor = () => {
             <div>
                 <CodeMirror
                     autoCorrect='true'
-                    autoCloseTags
+                   
                     value={value} height="100vh"
                     theme={draculaInit({
                         settings: {
