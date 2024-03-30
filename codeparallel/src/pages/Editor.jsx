@@ -29,7 +29,6 @@ const Editor = () => {
             <div>
                 <CodeMirror
                     autoCorrect='true'
-                   
                     value={value} height="100vh"
                     theme={draculaInit({
                         settings: {

@@ -10,13 +10,14 @@ const Editorpage = () => {
     const navigate = useNavigate();
     const socketRef = useRef(null);
     const location = useLocation();
+    console.log(location.state)
     const [clients, setClients] = useState([])
     const roomId = useParams()
-    console.log(roomId);
+
     useEffect(() => {
         const init = async () => {
-
-            socketRef.current = initSocket();
+            socketRef.current = await initSocket();
+            console.log(socketRef.current);
             socketRef.current.on('connect_error', (err) => handleErrors(err));
             socketRef.current.on('connect_failed', (err) => handleErrors(err));
             const handleErrors = (e) => {
@@ -25,16 +26,29 @@ const Editorpage = () => {
                 navigate('/')
 
             }
+            // Emiting when a user Joined for the first time
             socketRef.current.emit(ACTIONS.JOIN, {
                 roomId,
-                username: location.state?.username
+                username: location.state?.userName
             });
+
+            // Telling rest of the user that someone joined
+            socketRef.current.on(ACTIONS.JOINED, ({ clients, username, socketid }) => {
+                if (username !== location.state.userName) {
+                    toast.success(`${username} joined the room.`)
+                    console.log(username, ' joined')
+                }
+                setClients(clients)
+            })
+
+
         }
         init();
     }, [])
     if (!location.state) {
         navigate('/')
     }
+    console.log(clients);
     return (
         <div className='flex justify-between fixed'>
             <div className='w-[15vw] h-[100vh] bg-black p-4 flex flex-col justify-between fo'>
@@ -51,12 +65,12 @@ const Editorpage = () => {
                     </div>
                     <div>
                         {/* Connected */}
-                        <h1 className='font-bold '>Connected</h1>
+                        <h1 className='font-bold text-white'>Connected</h1>
                         <div className='flex justify-between flex-wrap items-center gap-3'>
                             {
                                 clients.map((client) => {
                                     return (
-                                        <Client key={client.socketID} clientName={client.clientName} />
+                                        <Client key={client.socketid} clientName={client.username} />
                                     )
                                 })
                             }
