@@ -1,10 +1,40 @@
-import { Button } from 'bootstrap';
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FaLaptopCode } from "react-icons/fa";
 import Client from '../component/Client';
 import Editor from './Editor';
+import { initSocket } from '../Socket';
+import ACTIONS from '../../Actions';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 const Editorpage = () => {
+    const navigate = useNavigate();
+    const socketRef = useRef(null);
+    const location = useLocation();
     const [clients, setClients] = useState([])
+    const roomId = useParams()
+    console.log(roomId);
+    useEffect(() => {
+        const init = async () => {
+
+            socketRef.current = initSocket();
+            socketRef.current.on('connect_error', (err) => handleErrors(err));
+            socketRef.current.on('connect_failed', (err) => handleErrors(err));
+            const handleErrors = (e) => {
+                console.log('Socket error ', e);
+                toast.error('Socket connection failed ,try again later');
+                navigate('/')
+
+            }
+            socketRef.current.emit(ACTIONS.JOIN, {
+                roomId,
+                username: location.state?.username
+            });
+        }
+        init();
+    }, [])
+    if (!location.state) {
+        navigate('/')
+    }
     return (
         <div className='flex justify-between fixed'>
             <div className='w-[15vw] h-[100vh] bg-black p-4 flex flex-col justify-between fo'>
